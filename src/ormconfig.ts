@@ -10,7 +10,7 @@ const config: ConnectionOptions = {
     'username': process.env.USERNAME,
     'password': process.env.PASSWORD,
     'database': process.env.DATABASE,
-	'synchronize': false,
+	'synchronize': true, //to create tables and columns automatically
 	'logging': false,
 	'namingStrategy': new SnakeNamingStrategy,
 	'entities': [

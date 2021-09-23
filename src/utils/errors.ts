@@ -8,5 +8,3 @@ export class HttpError extends CustomError {
 		super(message);
 	}
 }
-
-// new HttpError(404, 'Not found'); //example
