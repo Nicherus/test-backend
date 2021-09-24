@@ -61,3 +61,23 @@ export const validateId = (id: string) : boolean => {
 	
 	return !!validation.error;
 };
+
+export const validateLogin = (
+	username: string,
+	password: string,
+) : boolean => {
+
+	const match = joi.object({
+		username: joi.string().required(),
+		password: joi.string().min(6).required(),
+	});
+
+	const data = {
+		username,
+		password
+	};
+
+	const validation = match.validate(data);
+	
+	return !!validation.error;
+};

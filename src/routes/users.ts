@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { registerUserMiddleware, getUserByIdMiddleware, updateUserMiddleware, deleteUserMiddleware} from '../middlewares/usersMiddlewares';
 import usersController from '../controllers/usersController';
+import { verifyJWT } from 'src/middlewares/authMiddleware';
 
 const users = Router();
 
@@ -32,7 +33,7 @@ users.get('/:id', getUserByIdMiddleware, async (request: Request, response: Resp
 	}
 });
 
-users.put('/:id', updateUserMiddleware, async (request: Request, response: Response): Promise<Response> => {
+users.put('/:id', verifyJWT, updateUserMiddleware, async (request: Request, response: Response): Promise<Response> => {
 	try{
 		const user = await usersController.updateUser(request.params.id, request.body.email, request.body.phone);
 		return response.status(200).send(user);
@@ -41,7 +42,7 @@ users.put('/:id', updateUserMiddleware, async (request: Request, response: Respo
 	}
 });
 
-users.delete('/:id', deleteUserMiddleware, async (request: Request, response: Response): Promise<Response> => {
+users.delete('/:id', verifyJWT, deleteUserMiddleware, async (request: Request, response: Response): Promise<Response> => {
 	try{
 		const deleted = await usersController.deleteUser(request.params.id);
 		return response.status(200).send(deleted);

@@ -1,5 +1,8 @@
 import { HttpError } from '../utils/errors';
 import { getConnection } from 'typeorm';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 import { User } from '../entities/User';
 
 export default new class UsersController {
@@ -9,7 +12,7 @@ export default new class UsersController {
 		
 		const user = new User;
 		user.username = username;
-		user.password = password;
+		user.password = bcrypt.hashSync(password, 10);
 		user.email = email;
 		user.phone = phone;
 
@@ -40,6 +43,11 @@ export default new class UsersController {
 		return findUser;
 	};
 
+	findUserByUsername = async (username: string) : Promise<User> => {
+		const user = await this.usersRepository.findOne({ where: { username } });
+		return user;
+	}
+
 	updateUser = async (userId: string, email: string, phone: number) : Promise<User> => {
 
 		const user = await this.getUserById(userId);
@@ -61,4 +69,22 @@ export default new class UsersController {
 		return true;
 	}
 
+	postSignIn = async (username: string, password: string) : Promise<string> => {
+		const user = await this.findUserByUsername(username);
+	
+		if (!user) throw new HttpError(400, 'username or password not valid');
+	
+		const checkPassword = bcrypt.compareSync(password, user.password)
+	
+		if(checkPassword){
+			const { id } = user;
+			const token = jwt.sign({ id }, process.env.SECRET, {
+				expiresIn: 86400,
+			});
+
+			return token;
+		}
+
+		throw new HttpError(401, 'username or password not valid');
+	}
 };
