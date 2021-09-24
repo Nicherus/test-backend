@@ -69,7 +69,7 @@ export default new class UsersController {
 		return true;
 	}
 
-	postSignIn = async (username: string, password: string) : Promise<string> => {
+	login = async (username: string, password: string) : Promise<string> => {
 		const user = await this.findUserByUsername(username);
 	
 		if (!user) throw new HttpError(400, 'username or password not valid');

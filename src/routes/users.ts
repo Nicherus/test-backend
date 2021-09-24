@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
-import { registerUserMiddleware, getUserByIdMiddleware, updateUserMiddleware, deleteUserMiddleware} from '../middlewares/usersMiddlewares';
+import { registerUserMiddleware, getUserByIdMiddleware, updateUserMiddleware, deleteUserMiddleware, loginMiddleware} from '../middlewares/usersMiddlewares';
 import usersController from '../controllers/usersController';
-import { verifyJWT } from 'src/middlewares/authMiddleware';
+import { verifyJWT } from '../middlewares/authMiddleware';
 
 const users = Router();
 
@@ -10,6 +10,15 @@ users.post('/register', registerUserMiddleware, async (request: Request, respons
 	try{
 		const user = await usersController.registerUser(request.body.username, request.body.password, request.body.email, request.body.phone);
 		return response.status(200).send(user);
+	} catch(error){
+		return response.status(error.code).send(error.message);
+	}
+});
+
+users.post('/login', loginMiddleware, async (request: Request, response: Response): Promise<Response> => {
+	try{
+		const token = await usersController.login(request.body.username, request.body.password);
+		return response.status(200).send({token});
 	} catch(error){
 		return response.status(error.code).send(error.message);
 	}
