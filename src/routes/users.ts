@@ -17,8 +17,8 @@ users.post('/register', registerUserMiddleware, async (request: Request, respons
 
 users.post('/login', loginMiddleware, async (request: Request, response: Response): Promise<Response> => {
 	try{
-		const token = await usersController.login(request.body.username, request.body.password);
-		return response.status(200).send({token});
+		const data = await usersController.login(request.body.username, request.body.password);
+		return response.status(200).send(data);
 	} catch(error){
 		return response.status(error.code).send(error.message);
 	}
