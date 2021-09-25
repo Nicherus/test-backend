@@ -16,9 +16,9 @@ contacts.post('/:id', verifyJWT, createContactMiddleware,async (request: Request
 	}
 });
 
-contacts.put('/:id', verifyJWT, checkIdMiddleware, updateContactMiddleware, async (request: Request, response: Response): Promise<Response> => {
+contacts.put('/:id', verifyJWT, checkIdMiddleware, updateContactMiddleware, async (request: any, response: Response): Promise<Response> => {
 	try{
-		const contact = await contactsController.editContact(request.body, request.params.id);
+		const contact = await contactsController.editContact(request.body, request.params.id, request.userId);
 		return response.status(200).send(contact);
 	} catch(error){
 		return response.status(error.code).send(error.message);

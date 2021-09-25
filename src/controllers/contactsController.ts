@@ -23,10 +23,10 @@ export default new class ContactsController {
 		return findContact;
 	};
 
-	editContact = async ({name, email, phone, userId}, contactId: string) : Promise<Contact> => {
+	editContact = async ({name, email, phone}, contactId: string, userId: string) : Promise<Contact> => {
 		const contact = await this.getContactById(contactId);
 		if(!contact) throw new HttpError(404, 'contact not found');
-
+		
 		if(contact.userId !== userId) throw new HttpError(401, 'unauthorized');
 
 		contact.name = name || contact.name;
