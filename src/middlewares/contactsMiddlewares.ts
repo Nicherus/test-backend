@@ -18,10 +18,9 @@ export const createContactMiddleware = async (request: any, response: Response, 
 };
 
 export const updateContactMiddleware = async (request: any, response: Response, next: NextFunction): Promise<Response | void> => {
-	const { email, phone } = request.body;
-	const userId = request.params.id;
+	const { name, email, phone } = request.body;
 
-	const failValidation = validateContact(email, phone, userId);
+	const failValidation = validateContact(name, email, phone);
 
 	if(failValidation) return response.status(400).send({error: 'Please, check the data you are sending'});
 

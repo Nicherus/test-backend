@@ -9,6 +9,8 @@ export default new class UsersController {
 	usersRepository = getConnection().getRepository(User);
 
 	registerUser = async (username: string, password: string, email: string, phone: number) : Promise<User> => {
+		const duplicatedUser = await this.usersRepository.findOne({where: {username}});
+		if (duplicatedUser) throw new HttpError(409, 'username already exists');
 		
 		const user = new User;
 		user.username = username;
