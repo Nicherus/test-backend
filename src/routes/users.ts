@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express';
+
 import { 
 	registerUserMiddleware, 
 	getUserByIdMiddleware, 
@@ -7,8 +8,8 @@ import {
 	loginMiddleware,
 	updatePasswordMiddleware
 } from '../middlewares/usersMiddlewares';
+
 import usersController from '../controllers/usersController';
-import contactsController from '../controllers/contactsController';
 import { verifyJWT } from '../middlewares/authMiddleware';
 
 const users = Router();
@@ -72,51 +73,6 @@ users.put('/password/:id', verifyJWT, updatePasswordMiddleware, async (request: 
 	try{
 		const passwordChanged = await usersController.updatePassword(request.body, request.params.id);
 		return response.status(200).send(passwordChanged);
-	} catch(error){
-		return response.status(error.code).send(error.message);
-	}
-});
-
-users.post('/contacts/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
-	try{
-		const contact = await contactsController.createContact(request.body, request.params.id);
-		return response.status(200).send(contact);
-	} catch(error){
-		return response.status(error.code).send(error.message);
-	}
-});
-
-users.put('/contacts/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
-	try{
-		const contact = await contactsController.editContact(request.body, request.params.id);
-		return response.status(200).send(contact);
-	} catch(error){
-		return response.status(error.code).send(error.message);
-	}
-});
-
-users.get('/contacts/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
-	try{
-		const contact = await contactsController.getAllContacts(request.params.id);
-		return response.status(200).send(contact);
-	} catch(error){
-		return response.status(error.code).send(error.message);
-	}
-});
-
-users.get('/contacts/data/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
-	try{
-		const contact = await contactsController.getContactById(request.params.id);
-		return response.status(200).send(contact);
-	} catch(error){
-		return response.status(error.code).send(error.message);
-	}
-});
-
-users.delete('/contacts/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
-	try{
-		const contactDeleted = await contactsController.deleteContact(request.params.id);
-		return response.status(200).send(contactDeleted);
 	} catch(error){
 		return response.status(error.code).send(error.message);
 	}

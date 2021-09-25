@@ -11,7 +11,7 @@ export const validateRegisterUser = (
 		username: joi.string().max(20).required(),
 		password: joi.string().min(6).required(),
 		email: joi.string().email().required(),
-		phone: joi.number().min(8).required()
+		phone: joi.number().required()
 	});
 
 	const data = {
@@ -34,7 +34,7 @@ export const validateUpdateUser = (
 
 	const match = joi.object({
 		email: joi.string().email().required(),
-		phone: joi.number().min(8).required(),
+		phone: joi.number().required(),
 		id: joi.string().uuid().required(),
 	});
 
@@ -94,6 +94,29 @@ export const validateUpdatePassword = (oldPassword: string, newPassword: string,
 		oldPassword,
 		newPassword,
 		id
+	};
+
+	const validation = match.validate(data);
+	
+	return !!validation.error;
+};
+
+export const validateContact = (
+	name: string,
+	email: string,
+	phone: number
+) : boolean => {
+
+	const match = joi.object({
+		name: joi.string().required(),
+		email: joi.string().email().required(),
+		phone: joi.number().required(),
+	});
+
+	const data = {
+		name,
+		email,
+		phone
 	};
 
 	const validation = match.validate(data);
