@@ -1,5 +1,10 @@
-import { Request, Response, NextFunction, request } from 'express';
-import { validateId, validateLogin, validateRegisterUser, validateUpdateUser } from '../validations/validations';
+import { Request, Response, NextFunction } from 'express';
+import { validateId, 
+	validateLogin, 
+	validateRegisterUser, 
+	validateUpdateUser, 
+	validateUpdatePassword 
+} from '../validations/validations';
 
 export const registerUserMiddleware = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
 	const { username, password, email, phone } = request.body;
@@ -27,6 +32,18 @@ export const updateUserMiddleware = async (request: any, response: Response, nex
 	
 	if(request.userId !== request.params.id) return response.status(401).send({error: 'Unauthorized'});
 	const failValidation = validateUpdateUser(email, phone, userId);
+	
+	if(failValidation) return response.status(400).send({error: 'Please, check the data you are sending'});
+
+	next();
+};
+
+export const updatePasswordMiddleware = async (request: any, response: Response, next: NextFunction): Promise<Response | void> => {
+	const { oldPassword, newPassword } = request.body;
+	const userId = request.params.id;
+	
+	if(request.userId !== request.params.id) return response.status(401).send({error: 'Unauthorized'});
+	const failValidation = validateUpdatePassword(oldPassword, newPassword, userId);
 	
 	if(failValidation) return response.status(400).send({error: 'Please, check the data you are sending'});
 

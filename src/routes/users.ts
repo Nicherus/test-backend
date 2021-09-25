@@ -1,5 +1,12 @@
 import { Request, Response, Router } from 'express';
-import { registerUserMiddleware, getUserByIdMiddleware, updateUserMiddleware, deleteUserMiddleware, loginMiddleware} from '../middlewares/usersMiddlewares';
+import { 
+	registerUserMiddleware, 
+	getUserByIdMiddleware, 
+	updateUserMiddleware, 
+	deleteUserMiddleware, 
+	loginMiddleware,
+	updatePasswordMiddleware
+} from '../middlewares/usersMiddlewares';
 import usersController from '../controllers/usersController';
 import { verifyJWT } from '../middlewares/authMiddleware';
 
@@ -56,6 +63,17 @@ users.delete('/:id', verifyJWT, deleteUserMiddleware, async (request: Request, r
 		const deleted = await usersController.deleteUser(request.params.id);
 		return response.status(200).send(deleted);
 	} catch(error){
+		return response.status(error.code).send(error.message);
+	}
+});
+
+users.put('/password/:id', verifyJWT, updatePasswordMiddleware, async (request: Request, response: Response): Promise<Response> => {
+	try{
+		const passwordChanged = await usersController.updatePassword(request.body, request.params.id);
+		return response.status(200).send(passwordChanged);
+	} catch(error){
+		console.log(error, "zap");
+		
 		return response.status(error.code).send(error.message);
 	}
 });

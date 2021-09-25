@@ -81,3 +81,22 @@ export const validateLogin = (
 	
 	return !!validation.error;
 };
+
+export const validateUpdatePassword = (oldPassword: string, newPassword: string, id: string) : boolean => {
+
+	const match = joi.object({
+		oldPassword: joi.string().min(6).required(),
+		newPassword: joi.string().min(6).required(),
+		id: joi.string().uuid().required()
+	});
+
+	const data = { 
+		oldPassword,
+		newPassword,
+		id
+	};
+
+	const validation = match.validate(data);
+	
+	return !!validation.error;
+};

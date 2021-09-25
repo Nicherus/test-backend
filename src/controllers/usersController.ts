@@ -36,7 +36,7 @@ export default new class UsersController {
 
 	getUserById = async (userId: string) : Promise<User> => {
 
-		const findUser = await this.usersRepository.findOne({ where: {id: userId}, select: ["id", "username", "phone", "email"] });
+		const findUser = await this.usersRepository.findOne({ where: {id: userId} });
 
 		if(!findUser) throw new HttpError(404, 'user id not found');
 
@@ -56,6 +56,8 @@ export default new class UsersController {
 		user.phone = phone || user.phone;
 
 		await user.save();
+
+		delete user.password;
 
 		return user;
 	}
@@ -86,5 +88,20 @@ export default new class UsersController {
 		}
 
 		throw new HttpError(401, 'username or password not valid');
+	}
+
+	updatePassword = async ({oldPassword, newPassword}, userId: string) : Promise<boolean> => {
+		const user = await this.getUserById(userId);
+
+		if (!user) throw new HttpError(404, 'user not found');
+
+		const checkPassword = bcrypt.compareSync(oldPassword, user.password)
+
+		if (!checkPassword) throw new HttpError(401, 'wrong password');
+		user.password = bcrypt.hashSync(newPassword, 10);
+
+		await user.save();
+
+		return true;
 	}
 };
