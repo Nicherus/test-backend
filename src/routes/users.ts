@@ -73,8 +73,6 @@ users.put('/password/:id', verifyJWT, updatePasswordMiddleware, async (request: 
 		const passwordChanged = await usersController.updatePassword(request.body, request.params.id);
 		return response.status(200).send(passwordChanged);
 	} catch(error){
-		console.log(error, "zap");
-		
 		return response.status(error.code).send(error.message);
 	}
 });
@@ -84,8 +82,6 @@ users.post('/contacts/:id', verifyJWT, async (request: Request, response: Respon
 		const contact = await contactsController.createContact(request.body, request.params.id);
 		return response.status(200).send(contact);
 	} catch(error){
-		console.log(error, "zap");
-		
 		return response.status(error.code).send(error.message);
 	}
 });
@@ -95,41 +91,33 @@ users.put('/contacts/:id', verifyJWT, async (request: Request, response: Respons
 		const contact = await contactsController.editContact(request.body, request.params.id);
 		return response.status(200).send(contact);
 	} catch(error){
-		console.log(error, "zap");
-		
-		return response.status(error.code).send(error.message);
-	}
-});
-
-users.get('/contacts', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
-	try{
-		const contact = await contactsController.getAllContacts(request.body, request.params.id);
-		return response.status(200).send(contact);
-	} catch(error){
-		console.log(error, "zap");
-		
 		return response.status(error.code).send(error.message);
 	}
 });
 
 users.get('/contacts/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
 	try{
-		const contact = await contactsController.getContactById(request.body, request.params.id);
+		const contact = await contactsController.getAllContacts(request.params.id);
 		return response.status(200).send(contact);
 	} catch(error){
-		console.log(error, "zap");
-		
+		return response.status(error.code).send(error.message);
+	}
+});
+
+users.get('/contacts/data/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
+	try{
+		const contact = await contactsController.getContactById(request.params.id);
+		return response.status(200).send(contact);
+	} catch(error){
 		return response.status(error.code).send(error.message);
 	}
 });
 
 users.delete('/contacts/:id', verifyJWT, async (request: Request, response: Response): Promise<Response> => {
 	try{
-		const contactDeleted = await contactsController.deleteContact(request.body, request.params.id);
+		const contactDeleted = await contactsController.deleteContact(request.params.id);
 		return response.status(200).send(contactDeleted);
 	} catch(error){
-		console.log(error, "zap");
-		
 		return response.status(error.code).send(error.message);
 	}
 });

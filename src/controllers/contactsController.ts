@@ -6,88 +6,63 @@ import { Contact } from '../entities/Contact';
 export default new class ContactsController {
 	contactsRepository = getConnection().getRepository(Contact);
 
-	createContact = async ({username, email, phone}, userId: string) : Promise<Contact> => {
+	createContact = async ({name, email, phone}, userId: string) : Promise<Contact> => {
 		
 		const contact = new Contact;
-		contact.username = username;
+		contact.name = name;
 		contact.email = email;
 		contact.phone = phone;
 		contact.userId = userId;
 
 		await contact.save();
 
-		const findContact = await this.contactsRepository.findOne({where: {userId}});
+		const findContact = await this.contactsRepository.findOne({where: {id: contact.id}});
 		
 		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
 		
 		return findContact;
 	};
 
-	editContact = async ({username, email, phone}, userId: string) : Promise<Contact> => {
-		
-		const contact = new Contact;
-		contact.username = username;
-		contact.email = email;
-		contact.phone = phone;
-		contact.userId = userId;
+	editContact = async ({name, email, phone}, contactId: string) : Promise<Contact> => {
+
+		const contact = await this.getContactById(contactId);
+		if(!contact) throw new HttpError(404, 'contact not found');
+
+		contact.name = name || contact.name;
+		contact.email = email || contact.email;
+		contact.phone = phone || contact.phone;
 
 		await contact.save();
 
-		const findContact = await this.contactsRepository.findOne({where: {userId}});
+		const findContact = await this.contactsRepository.findOne({where: {id: contactId}});
+		
+		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
+
+		return findContact;
+	};
+
+	getContactById = async (contactId: string) : Promise<Contact> => {
+		const findContact = await this.contactsRepository.findOne({where: {id: contactId}});
 		
 		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
 		
 		return findContact;
 	};
 
-	getContactById = async ({username, email, phone}, userId: string) : Promise<Contact> => {
-		
-		const contact = new Contact;
-		contact.username = username;
-		contact.email = email;
-		contact.phone = phone;
-		contact.userId = userId;
+	getAllContacts = async (userId: string) : Promise<Contact[]> => {
+		const findContact = await this.contactsRepository.find({where: {userId}});
 
-		await contact.save();
-
-		const findContact = await this.contactsRepository.findOne({where: {userId}});
-		
 		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
-		
+
 		return findContact;
 	};
 
-	getAllContacts = async ({username, email, phone}, userId: string) : Promise<Contact> => {
-		
-		const contact = new Contact;
-		contact.username = username;
-		contact.email = email;
-		contact.phone = phone;
-		contact.userId = userId;
+	deleteContact = async (contactId: string) : Promise<Boolean> => {
 
-		await contact.save();
+		const deletedContact = await this.contactsRepository.delete(contactId);
 
-		const findContact = await this.contactsRepository.findOne({where: {userId}});
-		
-		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
-		
-		return findContact;
-	};
+		if(!deletedContact) throw new HttpError(500, 'please, send this to a developer');
 
-	deleteContact = async ({username, email, phone}, userId: string) : Promise<Contact> => {
-		
-		const contact = new Contact;
-		contact.username = username;
-		contact.email = email;
-		contact.phone = phone;
-		contact.userId = userId;
-
-		await contact.save();
-
-		const findContact = await this.contactsRepository.findOne({where: {userId}});
-		
-		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
-		
-		return findContact;
+		return true;
 	};
 };

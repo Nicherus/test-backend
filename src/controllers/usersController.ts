@@ -38,7 +38,7 @@ export default new class UsersController {
 
 		const findUser = await this.usersRepository.findOne({ where: {id: userId} });
 
-		if(!findUser) throw new HttpError(404, 'user id not found');
+		if(!findUser) throw new HttpError(404, 'user not found');
 
 		return findUser;
 	};
@@ -51,6 +51,7 @@ export default new class UsersController {
 	updateUser = async (userId: string, email: string, phone: number) : Promise<User> => {
 
 		const user = await this.getUserById(userId);
+		if(!user) throw new HttpError(404, 'user not found');
 
 		user.email = email || user.email;
 		user.phone = phone || user.phone;
@@ -62,7 +63,7 @@ export default new class UsersController {
 		return user;
 	}
 
-	deleteUser = async (userId: string) : Promise<boolean> => {
+	deleteUser = async (userId: string) : Promise<Boolean> => {
 
 		const deletedUser = await this.usersRepository.delete(userId);
 
@@ -90,7 +91,7 @@ export default new class UsersController {
 		throw new HttpError(401, 'username or password not valid');
 	}
 
-	updatePassword = async ({oldPassword, newPassword}, userId: string) : Promise<boolean> => {
+	updatePassword = async ({oldPassword, newPassword}, userId: string) : Promise<Boolean> => {
 		const user = await this.getUserById(userId);
 
 		if (!user) throw new HttpError(404, 'user not found');

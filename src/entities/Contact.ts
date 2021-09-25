@@ -9,12 +9,8 @@ export class Contact extends BaseEntity {
     @Column({
         type: "varchar",
         length: 150,
-        unique: true,
     })
-    username: string;
-
-    @Column()
-    password: string;
+    name: string;
 
     @Column()
     email: string;
