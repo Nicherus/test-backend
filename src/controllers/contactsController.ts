@@ -12,22 +12,22 @@ export default new class ContactsController {
 		contact.name = name;
 		contact.email = email;
 		contact.phone = phone;
-		contact.userId = userId;
+		contact.user_id = userId;
 
 		await contact.save();
 
 		const findContact = await this.contactsRepository.findOne({where: {id: contact.id}});
 		
-		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
+		if(!findContact) throw new HttpError(500, 'Please, send this to a developer');
 		
 		return findContact;
 	};
 
 	editContact = async ({name, email, phone}, contactId: string, userId: string) : Promise<Contact> => {
 		const contact = await this.getContactById(contactId);
-		if(!contact) throw new HttpError(404, 'contact not found');
+		if(!contact) throw new HttpError(404, 'Contact not found');
 		
-		if(contact.userId !== userId) throw new HttpError(401, 'unauthorized');
+		if(contact.user_id !== userId) throw new HttpError(401, 'unauthorized');
 
 		contact.name = name || contact.name;
 		contact.email = email || contact.email;
@@ -37,7 +37,7 @@ export default new class ContactsController {
 
 		const findContact = await this.contactsRepository.findOne({where: {id: contactId}});
 		
-		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
+		if(!findContact) throw new HttpError(500, 'Please, send this to a developer');
 
 		return findContact;
 	};
@@ -45,15 +45,15 @@ export default new class ContactsController {
 	getContactById = async (contactId: string) : Promise<Contact> => {
 		const findContact = await this.contactsRepository.findOne({where: {id: contactId}});
 		
-		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
+		if(!findContact) throw new HttpError(500, 'Please, send this to a developer');
 		
 		return findContact;
 	};
 
 	getAllContacts = async (userId: string) : Promise<Contact[]> => {
-		const findContact = await this.contactsRepository.find({where: {userId}});
+		const findContact =  await this.contactsRepository.find({where: {user_id: userId}});
 
-		if(!findContact) throw new HttpError(500, 'please, send this to a developer');
+		if(!findContact) throw new HttpError(500, 'Please, send this to a developer');
 
 		return findContact;
 	};
@@ -62,7 +62,7 @@ export default new class ContactsController {
 
 		const deletedContact = await this.contactsRepository.delete(contactId);
 
-		if(!deletedContact) throw new HttpError(500, 'please, send this to a developer');
+		if(!deletedContact) throw new HttpError(500, 'Please, send this to a developer');
 
 		return true;
 	};

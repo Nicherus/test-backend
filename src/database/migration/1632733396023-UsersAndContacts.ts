@@ -55,7 +55,7 @@ export class UsersAndContacts1632733396023 implements MigrationInterface {
                     type: "varchar",
                 },
                 {
-                    name: "userId",
+                    name: "user_id",
                     type: "varchar",
                 },
             ]

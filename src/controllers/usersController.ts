@@ -10,7 +10,7 @@ export default new class UsersController {
 
 	registerUser = async (username: string, password: string, email: string, phone: number) : Promise<User> => {
 		const duplicatedUser = await this.usersRepository.findOne({where: {username}});
-		if (duplicatedUser) throw new HttpError(409, 'username already exists');
+		if (duplicatedUser) throw new HttpError(409, 'Username already exists');
 		
 		const user = new User;
 		user.username = username;
@@ -22,7 +22,7 @@ export default new class UsersController {
 
 		const findUser = await this.usersRepository.findOne({where: {id: user.id}, select: ["id", "username", "phone", "email"]});
 		
-		if(!findUser) throw new HttpError(500, 'please, send this to a developer');
+		if(!findUser) throw new HttpError(500, 'Please, send this to a developer');
 		
 		return findUser;
 	};
@@ -31,7 +31,7 @@ export default new class UsersController {
 
 		const findUsers = await this.usersRepository.find({ select: ["id", "username"] });
 
-		if(!findUsers) throw new HttpError(500, 'please, send this to a developer');
+		if(!findUsers) throw new HttpError(500, 'Please, send this to a developer');
 
 		return findUsers;
 	};
@@ -40,7 +40,7 @@ export default new class UsersController {
 
 		const findUser = await this.usersRepository.findOne({ where: {id: userId} });
 
-		if(!findUser) throw new HttpError(404, 'user not found');
+		if(!findUser) throw new HttpError(404, 'User not found');
 
 		return findUser;
 	};
@@ -53,7 +53,7 @@ export default new class UsersController {
 	updateUser = async (userId: string, email: string, phone: number) : Promise<User> => {
 
 		const user = await this.getUserById(userId);
-		if(!user) throw new HttpError(404, 'user not found');
+		if(!user) throw new HttpError(404, 'User not found');
 
 		user.email = email || user.email;
 		user.phone = phone || user.phone;
@@ -69,7 +69,7 @@ export default new class UsersController {
 
 		const deletedUser = await this.usersRepository.delete(userId);
 
-		if(!deletedUser) throw new HttpError(500, 'please, send this to a developer');
+		if(!deletedUser) throw new HttpError(500, 'Please, send this to a developer');
 
 		return true;
 	}
@@ -77,7 +77,7 @@ export default new class UsersController {
 	login = async (username: string, password: string) : Promise<any> => {
 		const user = await this.findUserByUsername(username);
 	
-		if (!user) throw new HttpError(400, 'username or password not valid');
+		if (!user) throw new HttpError(400, 'Username not found');
 	
 		const checkPassword = bcrypt.compareSync(password, user.password)
 	
@@ -90,17 +90,17 @@ export default new class UsersController {
 			return {id, token};
 		}
 
-		throw new HttpError(401, 'username or password not valid');
+		throw new HttpError(401, 'Wrong password');
 	}
 
 	updatePassword = async ({oldPassword, newPassword}, userId: string) : Promise<Boolean> => {
 		const user = await this.getUserById(userId);
 
-		if (!user) throw new HttpError(404, 'user not found');
+		if (!user) throw new HttpError(404, 'User not found');
 
 		const checkPassword = bcrypt.compareSync(oldPassword, user.password)
 
-		if (!checkPassword) throw new HttpError(401, 'wrong password');
+		if (!checkPassword) throw new HttpError(401, 'Wrong password');
 		user.password = bcrypt.hashSync(newPassword, 10);
 
 		await user.save();

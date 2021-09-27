@@ -7,12 +7,12 @@ import {
 export const createContactMiddleware = async (request: any, response: Response, next: NextFunction): Promise<Response | void> => {
 	const { name, email, phone } = request.body;
 
-	if(request.userId !== request.params.id) return response.status(401).send({error: 'Unauthorized'});
-	if(!name || !email || !phone) return response.status(422).send({error: 'Please check the data you are sending'});
+	if(request.userId !== request.params.id) return response.status(401).send('Unauthorized');
+	if(!name || !email || !phone) return response.status(422).send('Please check the data you are sending');
 
 	const failValidation = validateContact(name, email, phone);
 
-	if(failValidation) return response.status(400).send({error: 'Please, check the data you are sending'});
+	if(failValidation) return response.status(400).send('Please, check the data you are sending');
 
 	next();
 };
@@ -21,7 +21,7 @@ export const updateContactMiddleware = async (request: any, response: Response, 
 	const { name, email, phone } = request.body;
 
 	const failValidation = validateContact(name, email, phone);
-	if(failValidation) return response.status(400).send({error: 'Please, check the data you are sending'});
+	if(failValidation) return response.status(400).send('Please, check the data you are sending');
 
 	next();
 };
@@ -31,7 +31,7 @@ export const checkIdMiddleware = async (request: Request, response: Response, ne
 	
 	const failValidation = validateId(id);
 	
-	if(failValidation) return response.status(400).send({error: 'Please, check the data you are sending'});
+	if(failValidation) return response.status(400).send('Please, check the data you are sending');
 
 	next();
 };

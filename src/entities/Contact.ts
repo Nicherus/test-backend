@@ -18,5 +18,5 @@ export class Contact extends BaseEntity {
     phone: number;
 
     @Column()
-    userId: string;
+    user_id: string;
 }
