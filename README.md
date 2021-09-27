@@ -1,5 +1,4 @@
-make sure you have updated Node 14.17.6 and Yarn
-db is mysql
+make sure you have updated Node 14.17.6 and Yarn. The database used is mysql
 
 Instructions:
 ### `yarn install`
