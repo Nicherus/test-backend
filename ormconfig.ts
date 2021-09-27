@@ -10,21 +10,21 @@ const config: ConnectionOptions = {
     'username': process.env.USERNAME,
     'password': process.env.PASSWORD,
     'database': process.env.DATABASE,
-	'synchronize': true, //to create tables and columns automatically
+	'synchronize': false, //to create tables and columns automatically
 	'logging': false,
 	'namingStrategy': new SnakeNamingStrategy,
 	'entities': [
 		'src/entities/*.ts',
 	],
 	'migrations': [
-		'src/migration/*.ts',
+		'src/database/migration/*.ts',
 	],
 	'subscribers': [
 		'src/subscriber/**/*.ts',
 	],
 	'cli': {
 		'entitiesDir': 'src/entity',
-		'migrationsDir': 'src/migration',
+		'migrationsDir': 'src/database/migration',
 		'subscribersDir': 'src/subscriber',
 	}
 };

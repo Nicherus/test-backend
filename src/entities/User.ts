@@ -7,8 +7,7 @@ export class User extends BaseEntity {
     id: string;
 
     @Column({
-        type: "varchar",
-        length: 150,
+        type: 'varchar',
         unique: true,
     })
     username: string;
